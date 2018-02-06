@@ -1,3 +1,27 @@
-<p>
-  login works!
-</p>
+<section>
+  <form fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="10px"
+        [formGroup]="myForm"
+        (ngSubmit)="onSubmit()">
+
+    <mat-form-field>
+      <input type="email"
+             matInput
+             placeholder="Your email"
+             formControlName="email">
+      <mat-error *ngIf="myForm.get('email').errors?.email">Email must contain an @.</mat-error>
+      <mat-error *ngIf="myForm.get('email').errors?.required">Testing error</mat-error>
+    </mat-form-field>
+
+    <mat-form-field hintLabel="Should be at least 6 characters long">
+      <input type="password"
+             matInput
+             placeholder="password"
+             formControlName="password">
+      <mat-error>Field must not be empty.</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" >Submit</button>
+  </form>
+</section>
