@@ -28,7 +28,10 @@ export class TrainingService {
 
   completeExercise() {
     // Add properties to the object by using spread operator
-    this.completedExercises.push({...this.runningExercise, date: new Date(), state: 'completed'});
+    this.completedExercises.push(
+      {...this.runningExercise,
+        date: new Date(),
+        state: 'completed'});
     this.runningExercise = null;
     this.exerciseChanged.next(null);
   }
@@ -37,9 +40,10 @@ export class TrainingService {
     // Add properties to the object by using spread operator
     this.completedExercises.push(
       {...this.runningExercise,
-        calories: this.runningExercise.duration * (progress / 100),
         duration: this.runningExercise.duration * (progress / 100),
-        date: new Date(), state: 'cancelled'
+        calories: this.runningExercise.calories * (progress / 100),
+        date: new Date(),
+        state: 'cancelled'
       }
     );
     this.runningExercise = null;
@@ -48,6 +52,10 @@ export class TrainingService {
 
   getRunningExercise() {
     return {...this.runningExercise};
+  }
+
+  getCompletedExercises() {
+    return [...this.completedExercises];
   }
 
 }
