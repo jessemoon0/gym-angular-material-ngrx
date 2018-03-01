@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material';
 import {StopDialogComponent} from '../stop-dialog/stop-dialog.component';
 import {TrainingService} from '../training.service';
 
