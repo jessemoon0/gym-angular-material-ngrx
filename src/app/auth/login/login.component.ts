@@ -1,37 +1,38 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {UiService} from '../../shared/ui.service';
-import {Subscription} from 'rxjs/Subscription';
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../app.reducer';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators/map';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   myForm: FormGroup;
-  isLoading = false;
-  loadingSub: Subscription;
+  isLoading$: Observable<boolean>;
 
-  constructor(private authService: AuthService, private uiService: UiService) { }
+  constructor(
+    private authService: AuthService,
+    private uiService: UiService,
+    private store: Store<{ui: fromRoot.IState}>
+    ) { }
 
   ngOnInit() {
-    this.loadingSub = this.uiService.loadingStateChanged
-      .subscribe(
-        (state: boolean) => this.isLoading = state
-      );
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+    // this.loadingSub = this.uiService.loadingStateChanged
+    //   .subscribe(
+    //     (state: boolean) => this.isLoading = state
+    //   );
     this.myForm = new FormGroup({
       'email': new FormControl(null, [Validators.required, Validators.email]),
       'password': new FormControl(null, Validators.required)
     });
-  }
-
-  ngOnDestroy() {
-    if (this.loadingSub) {
-      this.loadingSub.unsubscribe();
-    }
   }
 
   onSubmit() {

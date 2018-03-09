@@ -18,6 +18,9 @@ import {AngularFireAuthModule} from 'angularfire2/auth';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
 import {StopDialogComponent} from './training/stop-dialog/stop-dialog.component';
 import {AuthModule} from './auth/auth.module';
+import { StoreModule } from '@ngrx/store';
+
+import { reducers } from './app.reducer';
 
 
 @NgModule({
@@ -35,7 +38,8 @@ import {AuthModule} from './auth/auth.module';
     SharedModule,
     AuthModule,
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    StoreModule.forRoot(reducers)
   ],
   providers: [AuthService, TrainingService, UiService],
   bootstrap: [AppComponent],
