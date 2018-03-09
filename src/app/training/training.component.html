@@ -1,4 +1,4 @@
-<mat-tab-group *ngIf="!ongoingTraining; else elsePart">
+<mat-tab-group *ngIf="!(ongoingTraining$ | async); else elsePart">
   <mat-tab label="New Exercise">
     <app-new-training></app-new-training>
   </mat-tab>

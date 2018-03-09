@@ -1,31 +1,33 @@
 import { Injectable } from '@angular/core';
 import { IExercise } from './Exercise.interface';
 import { Subject } from 'rxjs/Subject';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {Subscription} from 'rxjs/Subscription';
 import {UiService} from '../shared/ui.service';
+import {Store} from '@ngrx/store';
+import * as UI from '../shared/ui.actions';
+import * as Training from './training.actions';
+import * as fromTraining from './training.reducer';
 
 @Injectable()
 export class TrainingService {
 
-  private availableExercises: IExercise [] = [];
-  private runningExercise: IExercise;
-
-  exerciseChanged = new Subject<IExercise>();
-  exercisesChanged = new Subject<IExercise[]>();
-  finishedExercisesChanged = new Subject<IExercise[]>();
-
   private fbSubs: Subscription[] = [];
 
-  constructor(private db: AngularFirestore, private uiService: UiService) { }
+  constructor(
+    private db: AngularFirestore,
+    private uiService: UiService,
+    private store: Store<fromTraining.IState>
+  ) { }
 
   cancelSubscriptions() {
     this.fbSubs.forEach(sub => sub.unsubscribe());
   }
 
   fetchAvailableExercises() {
-    this.uiService.loadingStateChanged.next(true);
+    // this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db.collection('availableExercises')
       .snapshotChanges()
       .pipe(
@@ -41,14 +43,17 @@ export class TrainingService {
         }))
       .subscribe(
         (exercises: IExercise[]) => {
-          this.uiService.loadingStateChanged.next(false);
-          this.availableExercises = exercises;
-          this.exercisesChanged.next([...this.availableExercises]);
+          this.store.dispatch(new UI.StopLoading());
+          // this.uiService.loadingStateChanged.next(false);
+          this.store.dispatch(new Training.SetAvailableTrainings(exercises));
+          // this.availableExercises = exercises;
+          // this.exercisesChanged.next([...this.availableExercises]);
         },
         error => {
-          this.uiService.loadingStateChanged.next(false);
+          this.store.dispatch(new UI.StopLoading());
+          // this.uiService.loadingStateChanged.next(false);
           this.uiService.showSnackBar('Fetching Exercises Failed, Please try later');
-          this.exercisesChanged.next(null);
+          // this.exercisesChanged.next(null);
         })
     );
   }
@@ -58,44 +63,62 @@ export class TrainingService {
     // this.db.doc('availableExercises/' + selectedId).update({
     //   lastSelected: new Date()
     // });
-    this.runningExercise = this.availableExercises.find(ex => ex.id === selectedId);
-    this.exerciseChanged.next({...this.runningExercise});
+
+    this.store.dispatch(new Training.StartTraining(selectedId));
+    // this.runningExercise = this.availableExercises.find(ex => ex.id === selectedId);
+    // this.exerciseChanged.next({...this.runningExercise});
   }
 
   completeExercise() {
-    // Add properties to the object by using spread operator
-    this.addDataToFirestore(
-      {...this.runningExercise,
-        date: new Date(),
-        state: 'completed'});
-    this.runningExercise = null;
-    this.exerciseChanged.next(null);
+    this.store.select(fromTraining.lazyGetActiveExercise)
+      .pipe(take(1))
+      .subscribe(
+        (exercise: IExercise) => {
+          // Add properties to the object by using spread operator
+          this.addDataToFirestore(
+            {...exercise,
+              date: new Date(),
+              state: 'completed'});
+          this.store.dispatch(new Training.StopTraining());
+          // this.runningExercise = null;
+          // this.exerciseChanged.next(null);
+        }
+      );
   }
 
   cancelExercise(progress: number) {
-    // Add properties to the object by using spread operator
-    this.addDataToFirestore(
-      {...this.runningExercise,
-        duration: this.runningExercise.duration * (progress / 100),
-        calories: this.runningExercise.calories * (progress / 100),
-        date: new Date(),
-        state: 'cancelled'
-      }
-    );
-    this.runningExercise = null;
-    this.exerciseChanged.next(null);
+    this.store.select(fromTraining.lazyGetActiveExercise)
+      .pipe(take(1))
+      .subscribe(
+        (exercise: IExercise) => {
+          // Add properties to the object by using spread operator
+          this.addDataToFirestore(
+            {...exercise,
+              duration: exercise.duration * (progress / 100),
+              calories: exercise.calories * (progress / 100),
+              date: new Date(),
+              state: 'cancelled'
+            }
+          );
+        }
+      );
+
+    this.store.dispatch(new Training.StopTraining());
+    // this.runningExercise = null;
+    // this.exerciseChanged.next(null);
   }
 
-  getRunningExercise() {
-    return {...this.runningExercise};
-  }
+  // getRunningExercise() {
+  //   return {...this.runningExercise};
+  // }
 
   fetchFinishedExercises() {
     this.fbSubs.push(this.db.collection('finishedExercises')
       .valueChanges()
       .subscribe(
         (exercises: IExercise[]) => {
-          this.finishedExercisesChanged.next(exercises);
+          this.store.dispatch(new Training.SetFinishedTrainings(exercises));
+          // this.finishedExercisesChanged.next(exercises);
         },
         error => {
           console.log(error);
