@@ -1,16 +1,22 @@
-import {IExercise} from './Exercise.interface';
+import { IExercise } from './Exercise.interface';
 import * as fromRoot from '../app.reducer';
-import {SET_AVAILABLE_TRAININGS, SET_FINISHED_TRAININGS, START_TRAINING, STOP_TRAINING, TrainingActions} from './training.actions';
+import {
+  SET_AVAILABLE_TRAININGS,
+  SET_FINISHED_TRAININGS,
+  START_TRAINING,
+  STOP_TRAINING,
+  TrainingActions
+} from './training.actions';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
+
+export interface IState extends fromRoot.IState {
+  training: ITrainingState;
+}
 
 export interface ITrainingState {
   availableExercises: IExercise[];
   finishedExercises: IExercise[];
   activeTraining: IExercise;
-}
-
-export interface IState extends fromRoot.IState {
-  training: ITrainingState;
 }
 
 const initialState: ITrainingState = {
@@ -36,7 +42,9 @@ export function trainingReducer(state = initialState, action: TrainingActions) {
     case START_TRAINING: {
       return {
         ...state,
-        activeTraining : { ...state.availableExercises.find(ex => ex.id === action.payload) }
+        activeTraining : {
+          ...state.availableExercises.find(ex => ex.id === action.payload)
+        }
       };
     }
     case STOP_TRAINING: {

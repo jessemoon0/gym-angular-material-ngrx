@@ -4,8 +4,7 @@ import {AuthService} from '../auth.service';
 import {UiService} from '../../shared/ui.service';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducer';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators/map';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-login',

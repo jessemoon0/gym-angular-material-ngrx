@@ -8,6 +8,8 @@ export interface IState {
   auth: fromAuth.IState;
 }
 
+// ui and auth are the different "global services"
+// Training module is lazy loaded, that's why is not here
 export const reducers: ActionReducerMap<IState> = {
   ui: fromUi.uiReducer,
   auth: fromAuth.authReducer

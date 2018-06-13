@@ -12,12 +12,12 @@ import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service';
 import { environment } from '../environments/environment';
 import { AngularFireModule } from 'angularfire2';
-import {UiService} from './shared/ui.service';
-import {SharedModule} from './shared/shared.module';
-import {AngularFireAuthModule} from 'angularfire2/auth';
-import {AngularFirestoreModule} from 'angularfire2/firestore';
-import {StopDialogComponent} from './training/stop-dialog/stop-dialog.component';
-import {AuthModule} from './auth/auth.module';
+import { UiService } from './shared/ui.service';
+import { SharedModule } from './shared/shared.module';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { StopDialogComponent } from './training/stop-dialog/stop-dialog.component';
+import { AuthModule } from './auth/auth.module';
 import { StoreModule } from '@ngrx/store';
 
 import { reducers } from './app.reducer';

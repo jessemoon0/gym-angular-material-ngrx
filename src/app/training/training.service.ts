@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IExercise } from './Exercise.interface';
-import { Subject } from 'rxjs/Subject';
 import {map, take} from 'rxjs/operators';
 import {AngularFirestore} from 'angularfire2/firestore';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {UiService} from '../shared/ui.service';
 import {Store} from '@ngrx/store';
 import * as UI from '../shared/ui.actions';

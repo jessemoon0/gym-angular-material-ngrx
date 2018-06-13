@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {TrainingService} from '../training.service';
+import { Component, OnInit } from '@angular/core';
+import { TrainingService } from '../training.service';
 import { IExercise } from '../Exercise.interface';
 import { NgForm } from '@angular/forms';
 
@@ -7,7 +7,7 @@ import { NgForm } from '@angular/forms';
 import {UiService} from '../../shared/ui.service';
 import * as fromRoot from '../../app.reducer';
 import * as fromTraining from '../training.reducer';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 
 @Component({

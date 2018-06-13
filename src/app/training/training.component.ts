@@ -3,7 +3,7 @@ import { TrainingService } from './training.service';
 
 import * as fromTraining from './training.reducer';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-training',
