@@ -77,7 +77,9 @@ export class TrainingService {
           this.addDataToFirestore(
             {...exercise,
               date: new Date(),
-              state: 'completed'});
+              state: 'completed'
+            }
+          );
           this.store.dispatch(new Training.StopTraining());
           // this.runningExercise = null;
           // this.exerciseChanged.next(null);
