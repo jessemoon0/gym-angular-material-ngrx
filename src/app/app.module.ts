@@ -16,7 +16,6 @@ import { UiService } from './shared/ui.service';
 import { SharedModule } from './shared/shared.module';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { StopDialogComponent } from './training/stop-dialog/stop-dialog.component';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from '@ngrx/store';
 
@@ -42,7 +41,6 @@ import { reducers } from './app.reducer';
     StoreModule.forRoot(reducers)
   ],
   providers: [AuthService, TrainingService, UiService],
-  bootstrap: [AppComponent],
-  entryComponents: [StopDialogComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

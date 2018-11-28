@@ -21,6 +21,7 @@ import {trainingReducer} from './training.reducer';
     SharedModule,
     TrainingRoutingModule,
     StoreModule.forFeature('training', trainingReducer)
-  ]
+  ],
+  entryComponents: [StopDialogComponent]
 })
 export class TrainingModule { }

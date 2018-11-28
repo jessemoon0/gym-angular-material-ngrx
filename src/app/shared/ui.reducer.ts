@@ -12,12 +12,14 @@ export function uiReducer(state = initialState, action: UiActions) {
   switch (action.type) {
     case START_LOADING: {
       return {
-        isLoading : true
+        ...state,
+        isLoading: true
       };
     }
     case STOP_LOADING: {
       return {
-        isLoading : false
+        ...state,
+        isLoading: false
       };
     }
     default: {
